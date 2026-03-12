@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
+import mockData from "../../mockdata/cart";
 
 function Home() {
-  const [product, setProduct] = useState([]);
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      try {
-        const response = await fetch("https://fakestoreapi.com/products");
-        const result = await response.json();
-        setProduct(result);
-        console.log(result);
-      } catch (error) {
-        console.log("error while fetch", error);
-      }
-    };
-    fetchdata();
-  }, []);
+  const [product,setProduct] = useState(mockData);
+
+
+  // useEffect(() => { 
+  //   const fetchdata = async () =>{
+  //      try { const response = await fetch("https://fakestoreapi.com/products");
+  //      const result = await response.json(); setProduct(result); console.log(result); } 
+  //      catch (error) { console.log("error while fetch", error); } }; 
+  //      fetchdata();
+  //      }, []);
 
   const addToCart = (clickedProduct) => {
     const existingData = JSON.parse(localStorage.getItem("cart")) || [];
 
     const itemIndex = existingData.findIndex(
-      (item) => item.id === clickedProduct.id,
+      (item) => item.id === clickedProduct.id
     );
 
     if (itemIndex > -1) {
@@ -35,19 +32,21 @@ function Home() {
 
     window.dispatchEvent(new Event("cartUpdated"));
 
-toast.success(`${clickedProduct.title} added to cart!`);  };
+    toast.success(`${clickedProduct.title} added to cart!`);
+  };
 
   return (
     <div>
-      <div className="container mx-auto px-3 2xl:px-30 py-8 ">
-        <h2 className="text-3xl font-semibold mb-8"> All Products </h2>
+      <div className="container mx-auto px-3 2xl:px-30 py-8">
+        <h2 className="text-3xl font-semibold mb-8">All Products</h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {product.map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 flex flex-col h-full"
             >
-              <div className=" relative h-64 w-full bg-gray-50">
+              <div className="relative h-64 w-full bg-gray-50">
                 <img
                   src={item.image}
                   alt={item.title}
@@ -55,7 +54,7 @@ toast.success(`${clickedProduct.title} added to cart!`);  };
                 />
 
                 <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] px-2 py-1 rounded-full font-bold">
-                  stock:{item?.rating.count}
+                  stock: {item?.rating.count}
                 </span>
               </div>
 
@@ -66,7 +65,8 @@ toast.success(`${clickedProduct.title} added to cart!`);  };
 
                 <div className="flex justify-between text-gray-400 text-sm mb-2">
                   <span>{item.category}</span>
-                  <div className="flex gap-1 text-yellow-400 items-center ">
+
+                  <div className="flex gap-1 text-yellow-400 items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -86,11 +86,6 @@ toast.success(`${clickedProduct.title} added to cart!`);  };
                   <span className="font-bold text-xl text-gray-900">
                     ₹{item.price}
                   </span>
-                  {item.oldPrice && (
-                    <span className="text-gray-400 line-through text-sm">
-                      ₹{item.oldPrice}
-                    </span>
-                  )}
                 </div>
 
                 <button
@@ -103,6 +98,7 @@ toast.success(`${clickedProduct.title} added to cart!`);  };
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );
